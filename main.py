@@ -12,11 +12,13 @@ def main():
     run = True
     clock = pygame.time.Clock()
     board = Board()
+    board.draw_squares(WIN)
+    board.draw(WIN)
 
     while run:
         clock.tick(FPS)
 
-        board.draw_squares(WIN)
+        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

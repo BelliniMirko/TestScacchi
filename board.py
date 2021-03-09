@@ -1,5 +1,5 @@
 import pygame
-from constants import HEI, WID, BLACK, WHITE, SQ_SIZE, ROWS, COLS
+from constants import HEI, WID, BLACK, WHITE, SQ_SIZE, ROWS, COLS, BROWN
 from piecetypes import Pawn, King, Queen, Knight, Bishop, Rook
 
 
@@ -11,7 +11,7 @@ class Board:
         self.debug_print()
 
     def draw_squares(self, win):
-        win.fill(BLACK)
+        win.fill(BROWN)
         for row in range(ROWS):
             for col in range(row % 2, COLS, 2):
                 pygame.draw.rect(win, WHITE, (row*SQ_SIZE, col *SQ_SIZE, SQ_SIZE, SQ_SIZE))
@@ -43,21 +43,22 @@ class Board:
             self.board[6].append(Pawn(6, col, WHITE))
             
         #piazzo i pezzi bianchi
-        self.board[7].append(Rook(7, 0, BLACK))
-        self.board[7].append(Knight(7, 1, BLACK))
-        self.board[7].append(Bishop(7, 2, BLACK))
-        self.board[7].append(Queen(7, 3, BLACK))
-        self.board[7].append(King(7, 4, BLACK))
-        self.board[7].append(Bishop(7, 5, BLACK))
-        self.board[7].append(Knight(7, 6, BLACK))
-        self.board[7].append(Rook(7, 7, BLACK))
+        self.board[7].append(Rook(7, 0, WHITE))
+        self.board[7].append(Knight(7, 1, WHITE))
+        self.board[7].append(Bishop(7, 2, WHITE))
+        self.board[7].append(Queen(7, 3, WHITE))
+        self.board[7].append(King(7, 4, WHITE))
+        self.board[7].append(Bishop(7, 5, WHITE))
+        self.board[7].append(Knight(7, 6, WHITE))
+        self.board[7].append(Rook(7, 7, WHITE))
 
         
     def debug_print(self):
             print(self.board)
 
-    # def draw(self, win):
-    #     for row in range(ROWS):
-    #         for col in range(COLS):
-    #             if self.board[row][col]
+    def draw(self, win):
+        for row in range(ROWS):
+            for col in range(COLS):
+                if self.board[row][col] != 0:
+                    self.board[row][col].draw(win)
 
