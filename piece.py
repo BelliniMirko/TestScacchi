@@ -14,3 +14,5 @@ class Piece:
     def calc_pos(self):
         self.x = SQ_SIZE * self.col
         self.y = SQ_SIZE * self.row
+
+        
