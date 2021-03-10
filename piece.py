@@ -22,3 +22,8 @@ class Piece:
             win.blit(self.white_img, (self.x + (SQ_SIZE - DIM_PIECE)//2, self.y + (SQ_SIZE - DIM_PIECE)//2))
         elif self.color == BLACK:
             win.blit(self.black_img, (self.x + (SQ_SIZE - DIM_PIECE)//2, self.y + (SQ_SIZE - DIM_PIECE)//2))
+
+    def move(self, row, col):
+        self.row = row
+        self.col = col
+        self.calc_pos()

@@ -11,7 +11,7 @@ DIM_PIECE = SQ_SIZE - 20
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
-BROWN = (102, 51, 0)
+BROWN = (152, 101, 50)
 
 W_KING = pygame.transform.scale(pygame.image.load('assets/w_king.png'), (DIM_PIECE, DIM_PIECE))
 W_QUEEN = pygame.transform.scale(pygame.image.load('assets/w_queen.png'), (DIM_PIECE, DIM_PIECE))

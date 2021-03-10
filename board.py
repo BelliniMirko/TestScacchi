@@ -1,6 +1,7 @@
 import pygame
 from constants import HEI, WID, BLACK, WHITE, SQ_SIZE, ROWS, COLS, BROWN
 from piecetypes import Pawn, King, Queen, Knight, Bishop, Rook
+from piece import Piece
 
 
 class Board:
@@ -8,6 +9,10 @@ class Board:
     def __init__(self):
         self.board = [[], [], [], [], [], [], [], []] 
         self.create_board()
+        # self.draw_squares()
+        # self.draw()
+
+        
         self.debug_print()
 
     def draw_squares(self, win):
@@ -54,11 +59,32 @@ class Board:
 
         
     def debug_print(self):
-            print(self.board)
+            for row in range(ROWS):
+                for col in range(COLS):
+                    if isinstance(self.board[row][col], Piece) and self.board[row][col].color == WHITE:
+                        print("W" + type(self.board[row][col]).__name__, end='\t')
+                    elif isinstance(self.board[row][col], Piece) and self.board[row][col].color == BLACK:
+                        print("B" + type(self.board[row][col]).__name__, end='\t')
+                    else:
+                        print("0", end="\t")
+
+
+                
+                print("\n")
+
 
     def draw(self, win):
+        self.draw_squares(win)
         for row in range(ROWS):
             for col in range(COLS):
                 if self.board[row][col] != 0:
                     self.board[row][col].draw(win)
+
+    def get_piece(self, row, col):
+        return self.board[row][col]
+
+    def move(self, piece, row, col):
+        self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
+        #self.board[piece.row][piece.col].move(piece.row, piece.col) per testare swap
+        piece.move(row, col)
 

@@ -1,6 +1,6 @@
 import pygame 
-from constants import WID, HEI
-from board import Board
+from constants import WID, HEI, SQ_SIZE
+from game import Game
 
 FPS = 60
 
@@ -11,9 +11,14 @@ pygame.display.set_caption('SCACCHI')
 def main():
     run = True
     clock = pygame.time.Clock()
-    board = Board()
-    board.draw_squares(WIN)
-    board.draw(WIN)
+    game = Game(WIN)
+
+    def get_row_col_from_mouse(pos):
+        x, y = pos
+        row = y // SQ_SIZE
+        col = x // SQ_SIZE
+        return row, col
+    
 
     while run:
         clock.tick(FPS)
@@ -24,7 +29,17 @@ def main():
             if event.type == pygame.QUIT:
                 run = False
 
-        pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                row, col = get_row_col_from_mouse(pos)
+                game.select(row, col)
+                game.board.debug_print()
+
+        
+
+
+
+        game.update()
 
         
 
