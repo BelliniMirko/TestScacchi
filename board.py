@@ -88,3 +88,15 @@ class Board:
         #self.board[piece.row][piece.col].move(piece.row, piece.col) per testare swap
         piece.move(row, col)
 
+    def get_valid_moves(self, piece):
+        
+        moves = piece.get_moves(self.board)
+        return moves
+
+        
+
+
+
+
+
+

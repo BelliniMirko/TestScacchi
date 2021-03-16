@@ -8,10 +8,37 @@ class Pawn(Piece):
         super().__init__(row, col, color)
         self.white_img = W_PAWN
         self.black_img = B_PAWN
-
+        if self.color == WHITE:
+            self.direction = -1
+        else:
+            self.direction = 1
 
     def pawn_mov(self):
         pass
+
+    def get_moves(self, board):
+        moves = []
+
+        if self.row == 1 and self.color == BLACK:
+             if board[self.row + self.direction*2][self.col] == 0:
+                    moves.append((self.row + self.direction*2, self.col))
+
+        if self.row == 6 and self.color == WHITE:
+             if board[self.row + self.direction*2][self.col] == 0:
+                    moves.append((self.row + self.direction*2, self.col))            
+        
+        if board[self.row + self.direction][self.col] == 0:
+            moves.append((self.row + self.direction, self.col))
+
+        if self.col != 0:
+            if board[self.row + self.direction][self.col - 1] != 0 and board[self.row + self.direction][self.col - 1].color != self.color:
+                 moves.append((self.row + self.direction, self.col - 1))
+
+        if self.col != 7:
+            if board[self.row + self.direction][self.col + 1] != 0 and board[self.row + self.direction][self.col + 1].color != self.color:
+                 moves.append((self.row + self.direction, self.col + 1))
+
+        return moves
 
 
 
