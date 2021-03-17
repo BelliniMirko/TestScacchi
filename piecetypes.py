@@ -13,30 +13,38 @@ class Pawn(Piece):
         else:
             self.direction = 1
 
-    def pawn_mov(self):
-        pass
 
     def get_moves(self, board):
-        moves = []
+        moves = {}
 
+        #check double step in black side
         if self.row == 1 and self.color == BLACK:
              if board[self.row + self.direction*2][self.col] == 0:
-                    moves.append((self.row + self.direction*2, self.col))
+                    moves[(self.row + self.direction*2, self.col)] = "m"
+                    #moves.append((self.row + self.direction*2, self.col))
 
+        #check double step in white side
         if self.row == 6 and self.color == WHITE:
              if board[self.row + self.direction*2][self.col] == 0:
-                    moves.append((self.row + self.direction*2, self.col))            
-        
+                    #moves.append((self.row + self.direction*2, self.col))            
+                    moves[(self.row + self.direction*2, self.col)] = "m"
+
+        #check single step 
         if board[self.row + self.direction][self.col] == 0:
-            moves.append((self.row + self.direction, self.col))
+            #moves.append((self.row + self.direction, self.col))
+            moves[(self.row + self.direction, self.col)] = "m"
 
-        if self.col != 0:
+        #check take on the left side
+        if self.col > 0:
             if board[self.row + self.direction][self.col - 1] != 0 and board[self.row + self.direction][self.col - 1].color != self.color:
-                 moves.append((self.row + self.direction, self.col - 1))
+                #moves.append((self.row + self.direction, self.col - 1))
+                moves[(self.row + self.direction, self.col - 1)] = "t"
 
-        if self.col != 7:
+        #check take on the right side
+        if self.col < 7:
             if board[self.row + self.direction][self.col + 1] != 0 and board[self.row + self.direction][self.col + 1].color != self.color:
-                 moves.append((self.row + self.direction, self.col + 1))
+                #moves.append((self.row + self.direction, self.col + 1))
+                moves[(self.row + self.direction, self.col + 1)] = "t"
 
         return moves
 
@@ -50,8 +58,69 @@ class King(Piece):
         self.white_img = W_KING
         self.black_img = B_KING       
 
-    def king_mov(self):
-        pass
+    def get_moves(self, board):
+        moves = {}
+
+        #controlli verticali tranne ultima riga
+        if self.row < 7:
+
+            if board[self.row + 1][self.col] == 0:
+                moves[(self.row + 1, self.col)] = "m"
+            elif board[self.row + 1][self.col].color != self.color:
+                moves[(self.row + 1, self.col)] = "t"
+            
+            if self.col < 7:
+                if board[self.row + 1][self.col+1] == 0:
+                    moves[(self.row + 1, self.col+1)] = "m"
+                elif board[self.row + 1][self.col+1].color != self.color:
+                    moves[(self.row + 1, self.col+1)] = "t" 
+
+            if self.col > 0:
+                if board[self.row + 1][self.col-1] == 0:
+                    moves[(self.row + 1, self.col-1)] = "m"
+                elif board[self.row + 1][self.col-1].color != self.color:
+                    moves[(self.row + 1, self.col-1)] = "t"    
+
+        #controlli verticali tranne prima riga
+        if self.row > 0:
+
+            if board[self.row - 1][self.col] == 0:
+                moves[(self.row - 1, self.col)] = "m"
+            elif board[self.row - 1][self.col].color != self.color:
+                moves[(self.row - 1, self.col)] = "t"
+
+            if self.col < 7:
+                if board[self.row - 1][self.col+1] == 0:
+                    moves[(self.row - 1, self.col+1)] = "m"
+                elif board[self.row - 1][self.col+1].color != self.color:
+                    moves[(self.row - 1, self.col+1)] = "t"
+
+            if self.col > 0:
+                if board[self.row - 1][self.col-1] == 0:
+                    moves[(self.row - 1, self.col-1)] = "m"
+                elif board[self.row - 1][self.col-1].color != self.color:
+                    moves[(self.row - 1, self.col-1)] = "t"    
+
+        if self.col < 7:
+
+            if board[self.row][self.col + 1] == 0:
+                moves[(self.row, self.col + 1)] = "m"
+            elif board[self.row][self.col + 1].color != self.color:
+                moves[(self.row, self.col + 1)] = "t"
+
+        if self.col > 0:
+
+            if board[self.row][self.col - 1] == 0:
+                moves[(self.row, self.col - 1)] = "m"
+            elif board[self.row][self.col - 1].color != self.color:
+                moves[(self.row, self.col - 1)] = "t"
+
+        return moves
+
+
+                           
+
+
 
 
 class Bishop(Piece):
@@ -61,8 +130,81 @@ class Bishop(Piece):
         self.white_img = W_BISHOP
         self.black_img = B_BISHOP
 
-    def bishop_mov(self):
-        pass
+    def get_moves(self, board):
+        moves = {}
+        srow = self.row 
+        scol = self.col
+
+        #diagonale up right
+        while srow > 0 and scol < 7:
+            srow -= 1
+            scol += 1
+
+            if board[srow][scol] == 0:
+                moves[(srow, scol)] = "m"
+            elif board[srow][scol].color != self.color:
+                moves[(srow, scol)] = "t"
+                break
+            else:
+                break
+
+        srow = self.row 
+        scol = self.col
+
+        #diagonale up left
+        while srow > 0 and scol > 0:
+            srow -= 1
+            scol -= 1
+
+            if board[srow][scol] == 0:
+                moves[(srow, scol)] = "m"
+            elif board[srow][scol].color != self.color:
+                moves[(srow, scol)] = "t"
+                break
+            else:
+                break
+
+        srow = self.row 
+        scol = self.col
+
+        #diagonale down left
+        while srow < 7 and scol > 0:
+            srow += 1
+            scol -= 1
+
+            if board[srow][scol] == 0:
+                moves[(srow, scol)] = "m"
+            elif board[srow][scol].color != self.color:
+                moves[(srow, scol)] = "t"
+                break
+            else:
+                break
+
+        srow = self.row 
+        scol = self.col
+
+        #diagonale down right
+        while srow < 7 and scol < 7:
+            srow += 1
+            scol += 1
+
+            if board[srow][scol] == 0:
+                moves[(srow, scol)] = "m"
+            elif board[srow][scol].color != self.color:
+                moves[(srow, scol)] = "t"
+                break
+            else:
+                break
+        
+        
+
+        
+
+        
+
+        return moves
+
+
 
 
 

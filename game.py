@@ -1,6 +1,6 @@
 import pygame
 from board import Board
-from constants import WHITE, BLACK
+from constants import WHITE, BLACK, GREEN, SQ_SIZE
 
 
 class Game:
@@ -10,11 +10,13 @@ class Game:
          self.selected = None
          self.board = Board()
          self.turn = WHITE
-         self.valid_moves = []
+         self.valid_moves = {}
 
 
     def update(self):
         self.board.draw(self.win)
+        self.draw_valid_moves(self.valid_moves)
+
         pygame.display.update()
 
     def select(self, row, col):
@@ -23,6 +25,7 @@ class Game:
         if self.selected:
             result = self._move(row, col)
             if not result:
+                self.valid_moves = {}
                 self.selected = None
                 self.select(row, col)
 
@@ -40,8 +43,12 @@ class Game:
         piece = self.board.get_piece(row, col)
         #dovrò aggiungere controllo sulla casella di destinazione
 
-        if self.selected and (row, col) in self.valid_moves:  
-            self.board.move(self.selected, row, col)
+        if self.selected and (row, col) in self.valid_moves:
+            if self.valid_moves[(row, col)]  == "m":
+                self.board.move(self.selected, row, col)
+            else:
+                self.board.take(self.selected, row, col)
+            self.valid_moves = {}
             self.selected = None
             self.change_turn()
         else:
@@ -57,4 +64,7 @@ class Game:
             self.turn = WHITE
             
             
-
+    def draw_valid_moves(self, moves):
+        for move in moves:
+            row, col = move
+            pygame.draw.circle(self.win, GREEN, (col * SQ_SIZE + SQ_SIZE//2, row * SQ_SIZE + SQ_SIZE//2), 15)
