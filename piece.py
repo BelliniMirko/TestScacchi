@@ -28,4 +28,13 @@ class Piece:
         self.col = col
         self.calc_pos()
 
-    
+    def checkSpot(self, addRow, addCol, board, moves):
+        if board[self.row + addRow][self.col + addCol] == 0:
+                moves[(self.row + addRow, self.col + addCol)] = "m"
+        elif board[self.row + addRow][self.col + addCol].color != self.color:
+            moves[(self.row + addRow, self.col + addCol)] = "t"
+            return "t"
+        else:
+            return False
+        
+        return True

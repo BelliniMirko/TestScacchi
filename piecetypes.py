@@ -2,6 +2,9 @@ import pygame
 from piece import Piece
 from constants import W_BISHOP, W_KING, W_KNIGHT, W_PAWN, W_QUEEN, W_ROOK, B_BISHOP, B_KING, B_KNIGHT, B_QUEEN, B_PAWN, B_ROOK, WHITE, BLACK, DIM_PIECE, SQ_SIZE
 
+
+
+
 class Pawn(Piece):
 
     def __init__(self, row, col, color):
@@ -132,76 +135,55 @@ class Bishop(Piece):
 
     def get_moves(self, board):
         moves = {}
-        srow = self.row 
-        scol = self.col
 
+        addRow = 0
+        addCol = 0
         #diagonale up right
-        while srow > 0 and scol < 7:
-            srow -= 1
-            scol += 1
+        while self.row + addRow > 0 and self.col + addCol < 7:
+            addRow -= 1
+            addCol += 1
 
-            if board[srow][scol] == 0:
-                moves[(srow, scol)] = "m"
-            elif board[srow][scol].color != self.color:
-                moves[(srow, scol)] = "t"
-                break
-            else:
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
                 break
 
-        srow = self.row 
-        scol = self.col
+        addRow = 0
+        addCol = 0
 
         #diagonale up left
-        while srow > 0 and scol > 0:
-            srow -= 1
-            scol -= 1
+        while self.row + addRow > 0 and self.col + addCol > 0:
+            addRow -= 1
+            addCol -= 1
 
-            if board[srow][scol] == 0:
-                moves[(srow, scol)] = "m"
-            elif board[srow][scol].color != self.color:
-                moves[(srow, scol)] = "t"
-                break
-            else:
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
                 break
 
-        srow = self.row 
-        scol = self.col
+        addRow = 0
+        addCol = 0
 
         #diagonale down left
-        while srow < 7 and scol > 0:
-            srow += 1
-            scol -= 1
+        while self.row + addRow < 7 and self.col + addCol > 0:
+            addRow += 1
+            addCol -= 1
 
-            if board[srow][scol] == 0:
-                moves[(srow, scol)] = "m"
-            elif board[srow][scol].color != self.color:
-                moves[(srow, scol)] = "t"
-                break
-            else:
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
                 break
 
-        srow = self.row 
-        scol = self.col
+        addRow = 0
+        addCol = 0
 
         #diagonale down right
-        while srow < 7 and scol < 7:
-            srow += 1
-            scol += 1
+        while self.row + addRow < 7 and self.col + addCol < 7:
+            addRow += 1
+            addCol += 1
 
-            if board[srow][scol] == 0:
-                moves[(srow, scol)] = "m"
-            elif board[srow][scol].color != self.color:
-                moves[(srow, scol)] = "t"
-                break
-            else:
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
                 break
         
-        
-
-        
-
-        
-
+    
         return moves
 
 
@@ -217,19 +199,44 @@ class Knight(Piece):
         self.white_img = W_KNIGHT
         self.black_img = B_KNIGHT
 
-    def knight_mov(self):
-        pass
+    def get_moves(self, board):
+        moves = {}
+
+        #check 2 down 1 right
+        if self.row < 6 and self.col < 7:
+            self.checkSpot(2, 1, board, moves)
+
+        #check 2 down 1 left 
+            self.checkSpot(2, -1, board, moves)
+
+        #check 2 up 1 left
+        if self.row > 1 and self.col > 0:
+            self.checkSpot(-2, -1, board, moves)
+
+        #check 2 up 1 right
+        if self.row > 1 and self.col < 7:
+            self.checkSpot(-2, 1, board, moves)
+
+        #check 1 up 2 left
+        if self.row > 0 and self.col > 1:
+            self.checkSpot(-1, -2, board, moves)
+
+        #check 1 up 2 right
+        if self.row > 0 and self.col < 6:
+            self.checkSpot(-1, +2, board, moves)
+
+        #check 1 down 2 right
+        if self.row < 7 and self.col < 6:
+            self.checkSpot(+1, +2, board, moves)
+
+        #check 1 down 2 left
+        if self.row < 7 and self.col > 1:
+            self.checkSpot(+1, -2, board, moves)
+
+        return moves
 
 
-class Queen(Piece):
 
-    def __init__(self, row, col, color):
-        super().__init__(row, col, color)
-        self.white_img = W_QUEEN
-        self.black_img = B_QUEEN
-
-    def queen_mov(self):
-        pass
 
 
 class Rook(Piece):
@@ -239,8 +246,162 @@ class Rook(Piece):
         self.white_img = W_ROOK
         self.black_img = B_ROOK
 
-    def rook_mov(self):
-        pass
+    def get_moves(self, board):
+        moves = {}
+
+        addRow = 0
+        addCol = 0
+
+        #sopra
+        while self.row + addRow > 0:
+            addRow -= 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+        
+        addRow = 0
+
+        #sotto
+        while self.row + addRow < 7:
+            addRow += 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+        addRow = 0
+
+        #sinistra
+        while self.col + addCol > 0:
+            addCol -= 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+        
+        addCol = 0
+
+        #destra
+        while self.col + addCol < 7:
+            addCol += 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+
+        return moves
+
+            
+
+
+
+
+class Queen(Piece):
+
+    def __init__(self, row, col, color):
+        super().__init__(row, col, color)
+        self.white_img = W_QUEEN
+        self.black_img = B_QUEEN
+
+    def get_moves(self, board):
+        moves = {}
+        addRow = 0
+        addCol = 0
+
+        #sopra
+        while self.row + addRow > 0:
+            addRow -= 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+        
+        addRow = 0
+
+        #sotto
+        while self.row + addRow < 7:
+            addRow += 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+        addRow = 0
+
+        #sinistra
+        while self.col + addCol > 0:
+            addCol -= 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+        
+        addCol = 0
+
+        #destra
+        while self.col + addCol < 7:
+            addCol += 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+
+        addRow = 0
+        addCol = 0
+        #diagonale up right
+        while self.row + addRow > 0 and self.col + addCol < 7:
+            addRow -= 1
+            addCol += 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+        addRow = 0
+        addCol = 0
+
+        #diagonale up left
+        while self.row + addRow > 0 and self.col + addCol > 0:
+            addRow -= 1
+            addCol -= 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+        addRow = 0
+        addCol = 0
+
+        #diagonale down left
+        while self.row + addRow < 7 and self.col + addCol > 0:
+            addRow += 1
+            addCol -= 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+
+        addRow = 0
+        addCol = 0
+
+        #diagonale down right
+        while self.row + addRow < 7 and self.col + addCol < 7:
+            addRow += 1
+            addCol += 1
+
+            flag = self.checkSpot(addRow, addCol, board, moves)
+            if  flag == False or flag == "t":
+                break
+        
+    
+        return moves
+
+
+
+
 
 
 
