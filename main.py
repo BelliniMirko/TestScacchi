@@ -7,17 +7,18 @@ FPS = 60
 WIN = pygame.display.set_mode((WID, HEI))
 pygame.display.set_caption('SCACCHI')
 
+def get_row_col_from_mouse(pos):
+    x, y = pos
+    row = y // SQ_SIZE
+    col = x // SQ_SIZE
+    return row, col
 
 def main():
     run = True
     clock = pygame.time.Clock()
     game = Game(WIN)
 
-    def get_row_col_from_mouse(pos):
-        x, y = pos
-        row = y // SQ_SIZE
-        col = x // SQ_SIZE
-        return row, col
+
     
 
     while run:
@@ -36,8 +37,6 @@ def main():
                 #game.board.debug_print()
 
         
-
-
 
         game.update()
 

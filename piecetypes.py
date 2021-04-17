@@ -59,7 +59,8 @@ class King(Piece):
     def __init__(self, row, col, color):
         super().__init__(row, col, color)
         self.white_img = W_KING
-        self.black_img = B_KING       
+        self.black_img = B_KING 
+        self.inCheck = False      
 
     def get_moves(self, board):
         moves = {}
@@ -119,9 +120,6 @@ class King(Piece):
                 moves[(self.row, self.col - 1)] = "t"
 
         return moves
-
-
-                           
 
 
 
@@ -189,9 +187,6 @@ class Bishop(Piece):
 
 
 
-
-
-
 class Knight(Piece):
 
     def __init__(self, row, col, color):
@@ -206,7 +201,8 @@ class Knight(Piece):
         if self.row < 6 and self.col < 7:
             self.checkSpot(2, 1, board, moves)
 
-        #check 2 down 1 left 
+        #check 2 down 1 left
+        if self.row < 6 and self.col > 0: 
             self.checkSpot(2, -1, board, moves)
 
         #check 2 up 1 left
@@ -234,7 +230,6 @@ class Knight(Piece):
             self.checkSpot(+1, -2, board, moves)
 
         return moves
-
 
 
 
@@ -294,8 +289,6 @@ class Rook(Piece):
         return moves
 
             
-
-
 
 
 class Queen(Piece):

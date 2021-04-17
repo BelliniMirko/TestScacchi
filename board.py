@@ -9,6 +9,9 @@ class Board:
     def __init__(self):
         self.board = [[], [], [], [], [], [], [], []] 
         self.create_board()
+        self.B_King_pos = [0, 3]
+        self.W_King_pos = [7, 4]
+
         # self.draw_squares()
         # self.draw()
 
@@ -86,7 +89,22 @@ class Board:
     def move(self, piece, row, col):
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         #self.board[piece.row][piece.col].move(piece.row, piece.col) per testare swap
+
+        if isinstance(piece, King):
+            if piece.color == WHITE:
+                self.W_King_pos = [row, col]
+                #print(self.W_King_pos)
+            else:
+                self.B_King_pos = [row, col]
+                #print(self.B_King_pos)
+
         piece.move(row, col)
+
+        self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]])
+        self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]])
+        print(self.board[self.W_King_pos[0]][self.W_King_pos[1]].inCheck)
+        print(self.board[self.B_King_pos[0]][self.B_King_pos[1]].inCheck)
+        
 
     def take(self, piece, row, col):
         self.board[row][col] = 0
@@ -94,10 +112,32 @@ class Board:
 
         piece.move(row, col)
 
+        self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]])
+        self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]])
+        print(self.board[self.W_King_pos[0]][self.W_King_pos[1]].inCheck)
+        print(self.board[self.B_King_pos[0]][self.B_King_pos[1]].inCheck)
+
+    def isInCheck(self, king):
+        check = False
+        for row in range(ROWS):
+            for col in range(COLS):
+                if self.board[row][col] != 0:
+                    if self.board[row][col].color != king.color:
+                        moves = self.board[row][col].get_moves(self.board)
+                        if (king.row, king.col) in moves:
+                            check = True
+                            king.inCheck = True
+
+        if check == False:
+            king.inCheck = False
 
     def get_valid_moves(self, piece):
         
         moves = piece.get_moves(self.board)
+        
+
+
+
         return moves
 
         

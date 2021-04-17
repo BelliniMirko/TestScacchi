@@ -33,7 +33,7 @@ class Game:
         if piece != 0 and piece.color == self.turn:
             self.selected = piece
             self.valid_moves = self.board.get_valid_moves(piece)
-            print(self.valid_moves)
+            #print(self.valid_moves)  #debug mosse valide
             return True 
 
         return False
