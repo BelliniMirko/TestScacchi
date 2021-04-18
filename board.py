@@ -1,4 +1,5 @@
 import pygame
+import copy 
 from constants import HEI, WID, BLACK, WHITE, SQ_SIZE, ROWS, COLS, BROWN
 from piecetypes import Pawn, King, Queen, Knight, Bishop, Rook
 from piece import Piece
@@ -9,7 +10,7 @@ class Board:
     def __init__(self):
         self.board = [[], [], [], [], [], [], [], []] 
         self.create_board()
-        self.B_King_pos = [0, 3]
+        self.B_King_pos = [0, 4]
         self.W_King_pos = [7, 4]
 
         # self.draw_squares()
@@ -31,8 +32,8 @@ class Board:
         self.board[0].append(Rook(0, 0, BLACK))
         self.board[0].append(Knight(0, 1, BLACK))
         self.board[0].append(Bishop(0, 2, BLACK))
-        self.board[0].append(King(0, 3, BLACK))
-        self.board[0].append(Queen(0, 4, BLACK))
+        self.board[0].append(Queen(0, 3, BLACK))
+        self.board[0].append(King(0, 4, BLACK))
         self.board[0].append(Bishop(0, 5, BLACK))
         self.board[0].append(Knight(0, 6, BLACK))
         self.board[0].append(Rook(0, 7, BLACK))
@@ -100,22 +101,30 @@ class Board:
 
         piece.move(row, col)
 
-        self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]])
-        self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]])
-        print(self.board[self.W_King_pos[0]][self.W_King_pos[1]].inCheck)
-        print(self.board[self.B_King_pos[0]][self.B_King_pos[1]].inCheck)
+        # self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]])
+        # self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]])
+        # print(self.board[self.W_King_pos[0]][self.W_King_pos[1]].inCheck)
+        # print(self.board[self.B_King_pos[0]][self.B_King_pos[1]].inCheck)
         
 
     def take(self, piece, row, col):
         self.board[row][col] = 0
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
 
+        if isinstance(piece, King):
+            if piece.color == WHITE:
+                self.W_King_pos = [row, col]
+                #print(self.W_King_pos)
+            else:
+                self.B_King_pos = [row, col]
+                #print(self.B_King_pos)
+
         piece.move(row, col)
 
-        self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]])
-        self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]])
-        print(self.board[self.W_King_pos[0]][self.W_King_pos[1]].inCheck)
-        print(self.board[self.B_King_pos[0]][self.B_King_pos[1]].inCheck)
+        # self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]])
+        # self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]])
+        # print(self.board[self.W_King_pos[0]][self.W_King_pos[1]].inCheck)
+        # print(self.board[self.B_King_pos[0]][self.B_King_pos[1]].inCheck)
 
     def isInCheck(self, king):
         check = False
@@ -126,14 +135,67 @@ class Board:
                         moves = self.board[row][col].get_moves(self.board)
                         if (king.row, king.col) in moves:
                             check = True
-                            king.inCheck = True
+                            return True
 
         if check == False:
-            king.inCheck = False
+            return False
 
-    def get_valid_moves(self, piece):
+
+    def testKing(self, piece, moves, turn):
+        invalid = []
+        for row, col in moves:
+            if moves[row, col] == "m":
+                king_coords = []
+                piece_row = piece.row
+                piece_col = piece.col
+                self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
+
+                        
+                if isinstance(piece, King):
+
+                    if piece.color == WHITE:
+                        king_coords = self.W_King_pos
+                        self.W_King_pos = [row, col]
+                        #print(self.W_King_pos)
+                    else:
+                        king_coords = self.B_King_pos                        
+                        self.B_King_pos = [row, col]
+
+                piece.move(row, col)
+
+                if turn == WHITE:
+                    if self.isInCheck(self.board[self.W_King_pos[0]][self.W_King_pos[1]]):
+                        invalid.append((row, col))
+                else:
+                    if self.isInCheck(self.board[self.B_King_pos[0]][self.B_King_pos[1]]):
+                        invalid.append((row, col))
+                
+                #restoro valori precedenti
+                self.board[piece_row][piece_col], self.board[row][col] = self.board[row][col], self.board[piece_row][piece_col]
+                piece.move(piece_row, piece_col)
+
+                if isinstance(piece, King):
+
+                    if piece.color == WHITE:
+                        self.W_King_pos = king_coords
+                        #print(self.W_King_pos)
+                    else:                        
+                        self.B_King_pos = king_coords
+
+        for i in invalid:
+            moves.pop(i)        
+
+            
+
+
+
+    def get_valid_moves(self, piece, turn):
         
         moves = piece.get_moves(self.board)
+        self.testKing(piece, moves, turn)
+
+
+
         
 
 
