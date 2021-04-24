@@ -51,9 +51,6 @@ class Pawn(Piece):
 
         return moves
 
-
-
-
 class King(Piece):
 
     def __init__(self, row, col, color):
@@ -121,9 +118,6 @@ class King(Piece):
 
         return moves
 
-
-
-
 class Bishop(Piece):
 
     def __init__(self, row, col, color):
@@ -184,9 +178,6 @@ class Bishop(Piece):
     
         return moves
 
-
-
-
 class Knight(Piece):
 
     def __init__(self, row, col, color):
@@ -230,9 +221,6 @@ class Knight(Piece):
             self.checkSpot(+1, -2, board, moves)
 
         return moves
-
-
-
 
 class Rook(Piece):
 
@@ -287,9 +275,6 @@ class Rook(Piece):
 
 
         return moves
-
-            
-
 
 class Queen(Piece):
 
